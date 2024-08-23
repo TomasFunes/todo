@@ -1,0 +1,18 @@
+body {
+  background-color: black;
+  color: white;
+}
+
+h1 {
+  text-align: center;
+}
+
+.config-options {
+  float: right;
+  background-color: blue;
+}
+
+
+.config-btn {
+  float: right;
+}
