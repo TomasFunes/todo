@@ -4,6 +4,7 @@ import List from "./list";
 import ListForm from "./list-form";
 import axios from "axios";
 
+
 export default function ListContainer() {
     const [listCreation, setListCreation] = useState(false);
     const lists = useContext(ListsContext);
@@ -15,7 +16,7 @@ export default function ListContainer() {
             title: event.target.title.value
         }
         try{
-            await axios.post('http://localhost:8000/api/lists/create', listData);
+            await axios.post('http://localhost:8080/todolists', listData);
         } catch (error) {
             console.error('Error posting data', error);
         }
@@ -28,9 +29,10 @@ export default function ListContainer() {
         <div className="list-container">
             {lists?.map(list => {
                 return <List
-                    key={list._id}
-                    id={list._id}
+                    key={list.id}
+                    id={list.id}
                     title={list.title}
+                    done={list.done}
                 />
             })}
             {listCreation ?

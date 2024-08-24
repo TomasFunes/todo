@@ -1,15 +1,10 @@
 import { FormEventHandler } from "react";
 import { useState } from "react";
-
-type Item = {
-    title: string,
-    description: string,
-    dueDate: Date
-}
+import { ItemType } from "../types";
 
 export default function ItemForm(props: {
     onItem: FormEventHandler<HTMLFormElement>,
-    item?: Item
+    item?: ItemType
 }) {
     
     const [itemData, setItemData] = useState((props.item ? props.item : {title: "", description: "", dueDate: new Date()}));
@@ -27,10 +22,6 @@ export default function ItemForm(props: {
     return (
         <form onSubmit={props.onItem}>
             <h3>Item info</h3>
-            <p>
-                <label htmlFor="title">Title: </label>
-                <input type="text" id="title" name="title" value={itemData.title} onChange={(e) => handleChange(e)} />
-            </p>
             <p>
                 <label htmlFor="description">Description: </label>
                 <input type="text" id="description" name="description" value={itemData.description}  onChange={(e) => handleChange(e)}/>

@@ -1,16 +1,9 @@
 import { MouseEventHandler, FormEventHandler, useState } from "react";
 import Config from "./config";
 import ItemForm from "./item-form";
+import { ItemType } from "../types";
 
-type Item = {
-    id: number,
-    listId: number,
-    title: string,
-    description: string,
-    dueDate: Date
-}
-
-export default function ListItem ({item, onUpdate, onDelete }: {item: Item, onUpdate: FormEventHandler<HTMLFormElement>, onDelete: MouseEventHandler<HTMLButtonElement>}) {
+export default function ListItem ({item, onUpdate, onDelete }: {item: ItemType, onUpdate: FormEventHandler<HTMLFormElement>, onDelete: MouseEventHandler<HTMLButtonElement>}) {
 
     const [editMode, setEditMode] = useState(false);
 
@@ -27,9 +20,8 @@ export default function ListItem ({item, onUpdate, onDelete }: {item: Item, onUp
                 </>
                 :
                 <div className="list-item">
-                    <h3>{item.title}</h3>
                     <p>{item.description}</p>
-                    <p>Due: {item.dueDate.toISOString().split("T")[0]}</p>
+                    <p>Due: {item.dueDate.split("T")[0] + " " + item.dueDate.split("T")[1].slice(0, -1)}</p>
                 </div>
             }
         </>

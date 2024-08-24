@@ -1,15 +1,9 @@
 import { FormEventHandler, useState } from "react";
-
-type List = {
-    id: number,
-    title: string
-}
-
-
+import { ListType } from "../types";
 
 export default function ListForm(props: {
     onList: FormEventHandler<HTMLFormElement>,
-    list?: List
+    list?: ListType
 }) {
 
     const [title, setTitle] = useState(props.list?.title as string);
