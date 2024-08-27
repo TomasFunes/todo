@@ -1,10 +1,11 @@
 import axios from "axios";
-import { createContext, useState, useEffect } from "react";
+import { createContext, useEffect, useState } from "react";
 import {ListType} from "./types";
 
 const BASE_URL = "http://localhost:8080";
 
-export const ListsContext = createContext<ListType[] | null>(null);
+export const ListsContext = createContext([] as ListType[]);
+export const ListFetchContext = createContext(() => {});
 
 
 export const ListsProvider = ({children}: { children: React.ReactNode }) => {
@@ -14,8 +15,7 @@ export const ListsProvider = ({children}: { children: React.ReactNode }) => {
         fetchLists();
     }, []);
 
-
-    async function fetchLists() {
+    const fetchLists = async () => {
         try {
             const response = await axios.get(`${BASE_URL}/todolists`);
             const lists = response.data;
@@ -23,14 +23,16 @@ export const ListsProvider = ({children}: { children: React.ReactNode }) => {
             setLists(lists);
             
         } catch (error) {
-            console.error('Error fetching data', error);
+            console.error('Error fetching data112', error);
         }
     }
 
 
     return(
         <ListsContext.Provider value={lists}>
+            <ListFetchContext.Provider value={fetchLists}>
                 {children}    
+            </ListFetchContext.Provider>
         </ListsContext.Provider>
     );
 }

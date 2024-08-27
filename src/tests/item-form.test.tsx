@@ -6,10 +6,10 @@ import ItemForm from "../components/item-form";
 describe ('List form', () => {
 
     it('renders correctly', () => {
-        render(<ItemForm  onItem={() => {}} />);
+        user.setup();
+        const handleList = vi.fn();
 
-        const titleInput = screen.getByLabelText(/title/i);
-        expect(titleInput).toBeInTheDocument();
+        render(<ItemForm item={{id: 1, todoListId: 1, description: "", dueDate: ""}} onItem={handleList}/>);
 
         const descriptionInput = screen.getByLabelText(/description/i);
         expect(descriptionInput).toBeInTheDocument();
@@ -28,7 +28,7 @@ describe ('List form', () => {
         user.setup();
         const handleList = vi.fn();
 
-        render(<ItemForm onItem={handleList} />);
+        render(<ItemForm item={{id: 1, todoListId: 1, description: "", dueDate: ""}} onItem={handleList} />);
 
         const submitBtn = screen.getByRole('button', {
             name: /accept/i

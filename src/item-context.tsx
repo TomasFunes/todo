@@ -5,7 +5,11 @@ import { ItemType } from "./types";
 const BASE_URL = "http://localhost:8080";
 
 
-export const ItemsContext = createContext<ItemType[] | null>(null);
+
+
+export const ItemsContext = createContext([] as ItemType[]);
+export const ItemsFetchContext = createContext(() => {});
+
 
 export const ItemsProvider = ({children}: { children: React.ReactNode }) => {
     const [items, setItems] = useState([]);
@@ -15,7 +19,7 @@ export const ItemsProvider = ({children}: { children: React.ReactNode }) => {
     }, []);
 
 
-    async function fetchItems() {
+    const fetchItems = async () =>  {
         try {
             const response = await axios.get(`${BASE_URL}/todoitems`);
             const items = response.data;
@@ -29,7 +33,9 @@ export const ItemsProvider = ({children}: { children: React.ReactNode }) => {
     
     return(
         <ItemsContext.Provider value={items}>
+            <ItemsFetchContext.Provider value={fetchItems}>
                 {children}    
+            </ItemsFetchContext.Provider>
         </ItemsContext.Provider>
     );
 }

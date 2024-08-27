@@ -6,7 +6,7 @@ import ListForm from "../components/list-form";
 describe ('List form', () => {
 
     it('renders correctly', () => {
-        render(<ListForm  onList={() => {}} />);
+        render(<ListForm  list={{id: 0, title: ""}} onList={() => {}} />);
 
         const titleInput = screen.getByLabelText(/title/i);
         expect(titleInput).toBeInTheDocument();
@@ -22,7 +22,7 @@ describe ('List form', () => {
         user.setup();
         const handleList = vi.fn();
 
-        render(<ListForm onList={handleList} />);
+        render(<ListForm list={{id: 0, title: ""}} onList={handleList} />);
 
         const submitBtn = screen.getByRole('button', {
             name: /done/i

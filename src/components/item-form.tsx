@@ -1,39 +1,39 @@
-import { FormEventHandler } from "react";
-import { useState } from "react";
-import { ItemType } from "../types";
+import {  FormEventHandler, useState } from "react";
 
-export default function ItemForm(props: {
-    onItem: FormEventHandler<HTMLFormElement>,
-    item?: ItemType
-}) {
-    
-    const [itemData, setItemData] = useState((props.item ? props.item : {title: "", description: "", dueDate: new Date()}));
+interface ItemFormProps {
+    item: {
+        id?: number;
+        todoListId: number;
+        description: string;
+        dueDate: string;
+    };
+    onItem: FormEventHandler<HTMLFormElement>;
+}
 
-    const handleChange = (e: any) => {
-        console.log(e.target);
-        if (itemData) {
-            setItemData({
-                ...itemData,
-                [e.target.name]: e.target.value,
-            });
-        }
-    }
+
+export default function ItemForm(props: ItemFormProps) {
+    const item = props.item;
+    const [description, setDescription] = useState(item.description);
+    const [dueDate, setDueDate] = useState(item.dueDate);
+    const [id] = useState(item.id);
 
     return (
         <form onSubmit={props.onItem}>
             <h3>Item info</h3>
             <p>
                 <label htmlFor="description">Description: </label>
-                <input type="text" id="description" name="description" value={itemData.description}  onChange={(e) => handleChange(e)}/>
+                <input type="text" id="description"  name="description" value={description} onChange={(e) => setDescription(e.target.value)}  />
             </p>
             <p>
                 <label htmlFor="dueDate">Due: </label>
-                <input type="date" id="dueDate" name="dueDate" />
+                <input type="date" id="dueDate"  name="dueDate" value={dueDate} onChange={(e) => setDueDate(e.target.value)} />
+            </p>
+            <p>
+                <input type="hidden" name="id" value={id} />
             </p>
             <p>
                 <button type="submit">Accept</button>
             </p>
         </form>
-
     );
 }

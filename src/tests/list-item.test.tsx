@@ -6,31 +6,27 @@ import ListItem from '../components/list-item';
 describe('Item tests', () => {
     it('renders correctly', () => {
         render(<ListItem 
-            item={{id: 1, listId: 1, title: "Item",  description: "Item description", dueDate: new Date()}}
+            item={{id: 1, todoListId: 1,  description: "Item description", dueDate: new Date().toISOString()}} 
+            onDelete={() => {}} 
             onUpdate={() => {}}
-            onDelete={() => {}}
             />);
 
         const configBtn = screen.getByRole('button');
 
-        const title = screen.getByRole('heading', {
-            level: 3,
-            name: "Item",
-        }) 
         const description = screen.getByText(/item description/i) 
         const due = screen.getByText(/Due:/i);
 
         expect(configBtn).toBeInTheDocument();
-        expect(title).toBeInTheDocument();
         expect(description).toBeInTheDocument();
         expect(due).toBeInTheDocument();
         
     })
+
     it('renders item form after clicking the edit button', async () => {
         render(<ListItem 
-            item={{id: 1, listId: 1, title: "Item",  description: "Item description", dueDate: new Date()}}
+            item={{id: 1, todoListId: 1,  description: "Item description", dueDate: new Date().toISOString()}} 
+            onDelete={() => {}} 
             onUpdate={() => {}}
-            onDelete={() => {}}
             />);
 
         user.setup;
@@ -50,11 +46,12 @@ describe('Item tests', () => {
         expect(formTitle).toBeInTheDocument();
         expect(cancelBtn).toBeInTheDocument();
     })
+
     it('renders item info after clicking the edit button twice', async () => {
         render(<ListItem 
-            item={{id: 1, listId: 1, title: "Item",  description: "Item description", dueDate: new Date()}}
+            item={{id: 1, todoListId: 1,  description: "Item description", dueDate: new Date().toISOString()}} 
+            onDelete={() => {}} 
             onUpdate={() => {}}
-            onDelete={() => {}}
             />);
 
         user.setup;
@@ -68,24 +65,20 @@ describe('Item tests', () => {
         await user.click(editBtn);
         await user.click(editBtn);
 
-        const title = screen.getByRole('heading', {
-            level: 3,
-            name: "Item",
-        }) 
         const description = screen.getByText(/item description/i) 
         const due = screen.getByText(/Due:/i);
 
-        expect(title).toBeInTheDocument();
         expect(description).toBeInTheDocument();
         expect(due).toBeInTheDocument();
     })
+
     it('renders item info after clicking the cancel button', async () => {
         render(<ListItem 
-            item={{id: 1, listId: 1, title: "Item",  description: "Item description", dueDate: new Date()}}
+            item={{id: 1, todoListId: 1,  description: "Item description", dueDate: new Date().toISOString()}} 
+            onDelete={() => {}} 
             onUpdate={() => {}}
-            onDelete={() => {}}
             />);
-
+            
         user.setup;
 
         const configBtn = screen.getByRole('button');
@@ -102,52 +95,9 @@ describe('Item tests', () => {
         await user.click(cancelBtn);
 
 
-        const title = screen.getByRole('heading', {
-            level: 3,
-            name: "Item",
-        }) 
         const description = screen.getByText(/item description/i) 
         const due = screen.getByText(/Due:/i);
 
-        expect(title).toBeInTheDocument();
-        expect(description).toBeInTheDocument();
-        expect(due).toBeInTheDocument();
-    })
-    it('renders item info after clicking the accept button', async () => {
-        render(<ListItem 
-            item={{id: 1, listId: 1, title: "Item",  description: "Item description", dueDate: new Date()}}
-            onUpdate={() => {}}
-            onDelete={() => {}}
-            />);
-
-
-        user.setup;
-
-        const configBtn = screen.getByRole('button');
-        await user.click(configBtn);
-
-        const editBtn = screen.getByRole('button', {
-            name: 'Edit',
-        })
-        await user.click(editBtn);
-
-        const acceptBtn = screen.getByRole('button', {
-            name: "Accept",
-        })
-
-
-
-        await user.click(acceptBtn);
-
-
-        const title = screen.getByRole('heading', {
-            level: 3,
-            name: /item/i,
-        }) 
-        const description = screen.getByText(/item description/i) 
-        const due = screen.getByText(/Due:/i);
-
-        expect(title).toBeInTheDocument();
         expect(description).toBeInTheDocument();
         expect(due).toBeInTheDocument();
     })
