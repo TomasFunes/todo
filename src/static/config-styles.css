@@ -1,0 +1,30 @@
+.config-options {
+    position: absolute;
+    z-index: 1;
+    right: -1px;
+    top: 41px;
+  }
+
+  
+  .config-btn {
+    float: right;
+    background-color: white;
+    width: 20%;
+    align-self: stretch;
+  }
+
+  .config-options button {
+    padding: 10px;
+    border-radius: 0;
+
+  }
+
+  .edit {
+    background-color: rgba(245, 200, 66, 1);
+    color: white;
+  }
+
+  .delete {
+    background-color: red;
+    color: white;
+  }

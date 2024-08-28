@@ -15,9 +15,10 @@ export default function ListForm(props: ListFormProps) {
     const [title, setTitle] = useState(list.title);
 
     return (
-        <form onSubmit={props.onList}>
-            <label htmlFor="title">Title</label>
-            <input id="title" name="title" type="text" value={title} onChange={(e) => setTitle(e.target.value)} />
+        <form className="list-form" onSubmit={props.onList}>
+            <p>
+                <input id="title" name="title" type="text" value={title} onChange={(e) => setTitle(e.target.value)} />
+            </p>
             <input type="hidden" id="id" name="id"  value={id} />
             <button type="submit">Done</button>
         </form>

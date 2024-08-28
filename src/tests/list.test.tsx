@@ -34,7 +34,7 @@ describe ('list testing', () => {
 
         await user.click(editBtn);
 
-        const titleInput = screen.getByLabelText(/title/i);
+        const titleInput = screen.getByRole("textbox");
         const doneBtn = screen.getByRole('button', {
             name: /done/i,
         })
@@ -101,16 +101,13 @@ describe ('list testing', () => {
         })        
         await user.click(addItemBtn)
 
-        const formTitle = screen.getByRole('heading', {
-            name: /item info/i
-        })
+
         const description = screen.getByLabelText(/description/i);
         const dueDate = screen.getByLabelText(/due/i);
         const acceptBtn = screen.getByRole('button', {
             name: /accept/i
         })
 
-        expect(formTitle).toBeInTheDocument();
         expect(description).toBeInTheDocument();
         expect(dueDate).toBeInTheDocument();
         expect(acceptBtn).toBeInTheDocument();

@@ -1,8 +1,8 @@
 import { http, HttpResponse } from "msw";
 import { ItemType, ListType } from "../types";
 
-const lists_url = "http://localhost:8080/todolists";
-const items_url = "http://localhost:8080/todoitems";
+const lists_url = "https://todoapi-1-1.onrender.com/todolists";
+const items_url = "https://todoapi-1-1.onrender.com/todoitems";
 
 const allLists = new Map<number, ListType>();
 const allItems = new Map<number, ItemType>();

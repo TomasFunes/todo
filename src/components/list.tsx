@@ -5,8 +5,8 @@ import ListItem from "./list-item";
 import ListForm from "./list-form";
 import ItemForm from "./item-form";
 import Config from "./config";
+import { urlContext } from "../url-context";
 
-const BASE_URL = "http://localhost:8080";
 
 interface ListProps {
     list: {
@@ -20,6 +20,7 @@ interface ListProps {
 
 
 export default function List (props: ListProps) {
+    const BASE_URL = useContext(urlContext);
 
     const list = props.list;
     
@@ -101,15 +102,19 @@ export default function List (props: ListProps) {
     
     return (
         <div className="list">
-            <Config onEdit={() => setEditMode(!editMode)} onDelete={props.onDelete}/>
+            <div className="list-header">
             { editMode ? 
-            <>
-            <ListForm list={list} onList={handleUpdateList} />
-            <button onClick={() => setEditMode(!editMode)}>Cancel</button>
-            </>
-            :
-            <h2 onClick={() => setIsOpen(!isOpen)}>{list.title}</h2>
+                <>
+                <button className="cancel-btn" onClick={() => setEditMode(!editMode)}>X</button>
+                <ListForm list={list} onList={handleUpdateList} />
+                </>
+                :
+                <>
+                <h2 onClick={() => setIsOpen(!isOpen)}>{list.title}</h2>
+                <Config onEdit={() => setEditMode(!editMode)} onDelete={props.onDelete}/>
+                </>
             }
+            </div>
             {isOpen && items?.filter(item => item.todoListId === list.id)
             .map((item) => {
                 return (
@@ -130,10 +135,10 @@ export default function List (props: ListProps) {
             {isOpen && (itemCreation ? 
             <>
             <ItemForm item={{todoListId: list.id, description: "", dueDate: ""}} onItem={handleCreateItem} />
-            <button onClick={() => setItemCreation(!itemCreation)}>Cancel</button>
+            <button className="cancel-item-btn" onClick={() => setItemCreation(!itemCreation)}>Cancel</button>
             </>
             :
-            <button onClick={() => setItemCreation(!itemCreation)}>Add Item</button>
+            <button className="add-item-btn" onClick={() => setItemCreation(!itemCreation)}>Add Item</button>
             )}
         </div>
     );

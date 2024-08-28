@@ -3,11 +3,13 @@ import List from "./list";
 import ListForm from "./list-form";
 import axios from "axios";
 import { ListFetchContext, ListsContext } from "../list-context";
+import { urlContext } from "../url-context";
+import '../static/list-styles.css'
 
-const BASE_URL = "http://localhost:8080";
 
 
 export default function ListContainer() {
+    const BASE_URL = useContext(urlContext);
     const [listCreation, setListCreation] = useState(false);
     const [listChanges, setListChanges] = useState(0);
 
@@ -83,7 +85,9 @@ export default function ListContainer() {
                     <button onClick={() => setListCreation(!listCreation)}>Cancel</button>
                 </>
                 :
-                <button onClick={() => setListCreation(!listCreation)}>Add list</button>
+                <div className="add-list">
+                    <button className="add-list-btn" onClick={() => setListCreation(!listCreation)}>Add list</button>
+                </div>
             }
         </div>
 

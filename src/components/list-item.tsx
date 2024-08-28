@@ -1,6 +1,7 @@
 import { useState, FormEvent, MouseEventHandler, FormEventHandler } from "react";
 import Config from "./config";
 import ItemForm from "./item-form";
+import "../static/list-styles.css"
 
 interface ListItemProps {
     item: {
@@ -27,19 +28,19 @@ export default function ListItem (props: ListItemProps) {
 
 
     return (
-        <>
-            <Config onEdit={() => setEditMode(!editMode)} onDelete={props.onDelete} />
+        <div className="list-item">
             {editMode ?
                 <>
                 <ItemForm item={item} onItem={handleUpdateItem} />
-                <button onClick={() => setEditMode(!editMode)}>Cancel</button>
+                <button className="cancel-item-btn" onClick={() => setEditMode(!editMode)}>Cancel</button>
                 </>
                 :
-                <div className="list-item">
-                    <p>{item.description}</p>
-                    <p>Due: {item.dueDate.split("T")[0]}</p>
-                </div>
-            }
-        </>
+                <>
+                <Config onEdit={() => setEditMode(!editMode)} onDelete={props.onDelete} />
+                <p>{item.description}</p>
+                <p>Due: {item.dueDate.split("T")[0]}</p>
+                </>
+                }
+        </div>
     );
 }

@@ -38,38 +38,11 @@ describe('Item tests', () => {
         })
 
         await user.click(editBtn);
-        const formTitle = screen.getByText(/item info/i);
         const cancelBtn = screen.getByRole('button', {
             name: 'Cancel'
         })
 
-        expect(formTitle).toBeInTheDocument();
         expect(cancelBtn).toBeInTheDocument();
-    })
-
-    it('renders item info after clicking the edit button twice', async () => {
-        render(<ListItem 
-            item={{id: 1, todoListId: 1,  description: "Item description", dueDate: new Date().toISOString()}} 
-            onDelete={() => {}} 
-            onUpdate={() => {}}
-            />);
-
-        user.setup;
-
-        const configBtn = screen.getByRole('button');
-        await user.click(configBtn);
-        const editBtn = screen.getByRole('button', {
-            name: 'Edit',
-        })
-
-        await user.click(editBtn);
-        await user.click(editBtn);
-
-        const description = screen.getByText(/item description/i) 
-        const due = screen.getByText(/Due:/i);
-
-        expect(description).toBeInTheDocument();
-        expect(due).toBeInTheDocument();
     })
 
     it('renders item info after clicking the cancel button', async () => {

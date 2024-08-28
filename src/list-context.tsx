@@ -1,14 +1,15 @@
 import axios from "axios";
-import { createContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import {ListType} from "./types";
+import { urlContext } from "./url-context";
 
-const BASE_URL = "http://localhost:8080";
 
 export const ListsContext = createContext([] as ListType[]);
 export const ListFetchContext = createContext(() => {});
 
 
 export const ListsProvider = ({children}: { children: React.ReactNode }) => {
+    const BASE_URL = useContext(urlContext);
     const [lists, setLists] = useState([]);
 
     useEffect(() => {

@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import { MouseEventHandler, MouseEvent } from "react";
+import "../static/config-styles.css";
 
 export default function Config (props: {
     onEdit: MouseEventHandler<HTMLButtonElement>,
@@ -36,8 +37,8 @@ export default function Config (props: {
         </button>
         { isActive && 
         <div className="config-options" ref={divRef}>
-            <button onClick={props.onEdit}>Edit</button>
-            <button onClick={props.onDelete}>Delete</button>
+            <button className="edit" onClick={props.onEdit}>Edit</button>
+            <button className="delete" onClick={props.onDelete}>Delete</button>
         </div>  
         }
         </>

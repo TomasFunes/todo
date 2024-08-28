@@ -28,9 +28,7 @@ describe('list container testing', () => {
         
         await user.click(addListBtn);
 
-        const titleInput = screen.getByRole('textbox', {
-            name: /title/i
-        });
+        const titleInput = screen.getByRole("textbox");
 
         const doneBtn = screen.getByRole('button', {
             name: /done/i
@@ -53,9 +51,7 @@ describe('list container testing', () => {
         
         await user.click(addListBtn);
 
-        const titleInput = screen.getByRole('textbox', {
-            name: /title/i
-        });
+        const titleInput = screen.getByRole("textbox");
 
         const doneBtn = screen.getByRole('button', {
             name: /done/i
@@ -84,10 +80,7 @@ describe('list container testing', () => {
         
         await user.click(addListBtn);
 
-        const titleInput = screen.getByRole('textbox', {
-            name: /title/i
-        });
-
+        const titleInput = screen.getByRole("textbox");
         const doneBtn = screen.getByRole('button', {
             name: /done/i
         })
@@ -109,9 +102,7 @@ describe('list container testing', () => {
         
         await user.click(editBtn);
         
-        const titleInput2 = screen.getByRole('textbox', {
-            name: /title/i
-        });
+        const titleInput2 = screen.getByRole("textbox");
         const doneBtn2 = screen.getByRole('button', {
             name: /done/i
         })

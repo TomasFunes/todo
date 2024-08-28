@@ -8,7 +8,7 @@ describe ('List form', () => {
     it('renders correctly', () => {
         render(<ListForm  list={{id: 0, title: ""}} onList={() => {}} />);
 
-        const titleInput = screen.getByLabelText(/title/i);
+        const titleInput = screen.getByRole("textbox");
         expect(titleInput).toBeInTheDocument();
 
         const doneBtn = screen.getByRole('button', {

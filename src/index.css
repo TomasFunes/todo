@@ -1,18 +1,38 @@
 body {
-  background-color: black;
-  color: white;
+  box-sizing: border-box;
+  background-color: whitesmoke;
+  font-family: Arial, Helvetica, sans-serif;
 }
+
+
+button,
+input,
+select,
+textarea {
+  font-family: inherit;
+  font-size: 100%;
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+button {
+  background: none;
+  border: none;
+  padding: 2px;
+}
+
 
 h1 {
   text-align: center;
 }
 
-.config-options {
-  float: right;
-  background-color: blue;
+p {
+  margin: 0;
 }
 
-
-.config-btn {
-  float: right;
+header {
+  border-bottom: 1px solid grey;
+  margin-bottom: 2rem;
+  
 }

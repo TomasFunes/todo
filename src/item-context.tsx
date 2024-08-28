@@ -1,8 +1,8 @@
 import axios from "axios";
-import { createContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import { ItemType } from "./types";
+import { urlContext } from "./url-context";
 
-const BASE_URL = "http://localhost:8080";
 
 
 
@@ -12,6 +12,7 @@ export const ItemsFetchContext = createContext(() => {});
 
 
 export const ItemsProvider = ({children}: { children: React.ReactNode }) => {
+    const BASE_URL = useContext(urlContext);
     const [items, setItems] = useState([]);
 
     useEffect(() => {

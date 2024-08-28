@@ -18,8 +18,7 @@ export default function ItemForm(props: ItemFormProps) {
     const [id] = useState(item.id);
 
     return (
-        <form onSubmit={props.onItem}>
-            <h3>Item info</h3>
+        <form className="item-form" onSubmit={props.onItem}>
             <p>
                 <label htmlFor="description">Description: </label>
                 <input type="text" id="description"  name="description" value={description} onChange={(e) => setDescription(e.target.value)}  />
