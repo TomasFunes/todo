@@ -1,11 +1,9 @@
-import axios from "axios";
-import { useContext, useState, useEffect, FormEvent, FormEventHandler, MouseEventHandler } from "react";
-import { ItemsContext, ItemsFetchContext } from "../item-context";
+import { useContext, useState, FormEvent, FormEventHandler, MouseEventHandler } from "react";
+import { ItemsContext, ItemsDispatchContext } from "../item-context";
 import ListItem from "./list-item";
 import ListForm from "./list-form";
 import ItemForm from "./item-form";
 import Config from "./config";
-import { urlContext } from "../url-context";
 
 
 interface ListProps {
@@ -16,25 +14,21 @@ interface ListProps {
     }
     onUpdate: FormEventHandler<HTMLFormElement>
     onDelete: MouseEventHandler<HTMLButtonElement>
+    onSelect: MouseEventHandler<HTMLHeadingElement>
+    isOpen: boolean
 }
 
 
 export default function List (props: ListProps) {
-    const BASE_URL = useContext(urlContext);
 
     const list = props.list;
     
     const [editMode, setEditMode] = useState(false);
     const [itemCreation, setItemCreation] = useState(false);
-    const [isOpen, setIsOpen] = useState(false);
-    const [itemChanges, setItemChanges] = useState(0);
     
     const items = useContext(ItemsContext);
-    const fetchItems = useContext(ItemsFetchContext);
+    const dispatch = useContext(ItemsDispatchContext);
 
-    useEffect(() => {
-        fetchItems();
-    }, [itemChanges]);    
     
     async function handleUpdateList(event: any) {
         setEditMode(false)
@@ -42,26 +36,26 @@ export default function List (props: ListProps) {
     }
     
 
-    async function handleCreateItem(event: FormEvent<HTMLElement>) {
+    async function handleCreateItem(event: FormEvent<HTMLFormElement>) {
         event.preventDefault();
-        const itemForm = event.target as HTMLFormElement;
-        const description = (itemForm.elements[0] as HTMLInputElement).value;
-        const dueDate = (itemForm.elements[1] as HTMLInputElement).value;
+        const formData = new FormData(event.currentTarget);
+
+        const description = formData.get("description") as string;
+        const dueDate = formData.get("dueDate") as string;
 
         const item = {
+            id: Math.floor(Math.random() * (100000000 - 1) + 1),
             todoListId: list.id,
             description,
-            dueDate
+            dueDate,
+            done: false
         }
 
-        try {
-            await axios.post(`${BASE_URL}/todoitems`, item)
+        dispatch({
+            type: 'create',
+            payload: item
+        })
   
-        } catch (err) {
-            console.log(`Error: ${err}`);
-        }
-
-        setItemChanges(itemChanges + 1);
         setItemCreation(false);
     }
 
@@ -72,50 +66,50 @@ export default function List (props: ListProps) {
         const formData = new FormData(event.currentTarget);
 
         const inputItem = {
-            id: formData.get("id"),
+            id: Number(formData.get("id")),
             todoListId: list.id,
-            description: formData.get("description"),
-            dueDate: formData.get("dueDate")
+            description: formData.get("description") as string,
+            dueDate: formData.get("dueDate") as string,
+            done: false
         }
 
-        try {
-            await axios.put(`${BASE_URL}/todoitems/${inputItem.id}`, inputItem);
-        } catch (err) {
-            console.log(`Error: ${err}`);
-        }
+        dispatch({
+            type: 'update',
+            payload: inputItem
+        });
 
-        setItemChanges(itemChanges + 1);
         setEditMode(false);
-
     }
 
     
     async function handleDeleteItem(id: number) {
-        try {
-            await axios.delete(`${BASE_URL}/todoitems/${id}`);            
-        } catch (err) {
-            console.log(`Error: ${err}` )
-        }
-        
-        setItemChanges(itemChanges + 1);
+        dispatch({
+            type: 'delete',
+            payload: {
+                id: id,
+                todoListId: list.id,
+                description: "",
+                dueDate: "",
+                done: false
+            }
+        });
     }
     
     return (
-        <div className="list">
-            <div className="list-header">
+        <div className="bg-white my-4 ">
+            <div className="flex justify-between rounded-md shadow-md cursor-pointer">
             { editMode ? 
                 <>
-                <button className="cancel-btn" onClick={() => setEditMode(!editMode)}>X</button>
-                <ListForm list={list} onList={handleUpdateList} />
+                <ListForm list={list} onList={handleUpdateList} onCancel={() => setEditMode(!editMode)} />
                 </>
                 :
                 <>
-                <h2 onClick={() => setIsOpen(!isOpen)}>{list.title}</h2>
+                <h2 className="text-lg font-bold flex-1 py-2 px-4 select-none" onClick={props.onSelect}>{list.title}</h2>
                 <Config onEdit={() => setEditMode(!editMode)} onDelete={props.onDelete}/>
                 </>
             }
             </div>
-            {isOpen && items?.filter(item => item.todoListId === list.id)
+            {props.isOpen && items?.filter(item => item.todoListId === list.id)
             .map((item) => {
                 return (
                 <ListItem
@@ -124,7 +118,8 @@ export default function List (props: ListProps) {
                         id: item.id,
                         todoListId: item.todoListId,
                         description: item.description,
-                        dueDate: item.dueDate
+                        dueDate: item.dueDate,
+                        done: item.done
                     }}
                     onDelete={() => handleDeleteItem(item.id)}
                     onUpdate={handleUpdateItem}
@@ -132,13 +127,12 @@ export default function List (props: ListProps) {
                 );
             })
             }
-            {isOpen && (itemCreation ? 
+            {props.isOpen && (itemCreation ? 
             <>
-            <ItemForm item={{todoListId: list.id, description: "", dueDate: ""}} onItem={handleCreateItem} />
-            <button className="cancel-item-btn" onClick={() => setItemCreation(!itemCreation)}>Cancel</button>
+            <ItemForm item={{todoListId: list.id, description: "", dueDate: ""}} onItem={handleCreateItem} onCancel={() => setItemCreation(!itemCreation)} />
             </>
             :
-            <button className="add-item-btn" onClick={() => setItemCreation(!itemCreation)}>Add Item</button>
+            <button className="green-btn w-full" onClick={() => setItemCreation(!itemCreation)}>Add Item +</button>
             )}
         </div>
     );

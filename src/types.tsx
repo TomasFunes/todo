@@ -10,7 +10,8 @@ export type ItemType = {
     id: number,
     todoListId: number,
     description: string,
-    dueDate: string
+    dueDate: string,
+    done: boolean
 }
 
 export type ItemsState = {

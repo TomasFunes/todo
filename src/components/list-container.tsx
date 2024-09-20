@@ -1,41 +1,32 @@
-import { useState, useEffect, useContext, FormEvent } from "react";
+import { useState, useContext, FormEvent } from "react";
 import List from "./list";
 import ListForm from "./list-form";
-import axios from "axios";
-import { ListFetchContext, ListsContext } from "../list-context";
-import { urlContext } from "../url-context";
-import '../static/list-styles.css'
+import { ListsContext, ListsDispatchContext } from "../list-context";
 
 
 
 export default function ListContainer() {
-    const BASE_URL = useContext(urlContext);
     const [listCreation, setListCreation] = useState(false);
-    const [listChanges, setListChanges] = useState(0);
+    const [activeList, setActiveList] = useState(0);
 
     const lists = useContext(ListsContext);
-    const fetchLists = useContext(ListFetchContext);
+    const dispatch = useContext(ListsDispatchContext);
 
-    useEffect(() => {
-        fetchLists();
-    }, [listChanges]);
 
 
     async function handleCreateList(event: any) {
         event.preventDefault();
-
         const formData = new FormData(event.currentTarget);
 
-        const listInput = {
-            title: formData.get("title")
-        }
-        try{
-            await axios.post(`${BASE_URL}/todolists`, listInput);
-        } catch (error) {
-            console.error('Error posting data', error);
-        }
+        dispatch({
+            type: 'create',
+            payload: {
+                id: Math.floor(Math.random() * (100000000 - 1) + 1),
+                title: String(formData.get("title")),
+                done: false
+            }
+        })
 
-        setListChanges(listChanges + 1);
         setListCreation(false);
     }
 
@@ -43,30 +34,41 @@ export default function ListContainer() {
     async function handleUpdateList(event: FormEvent<HTMLFormElement>) {
         event.preventDefault();
 
+
         const formData = new FormData(event.currentTarget);
-        const id = formData.get("id");
-
         const listInput = {
-            title: formData.get("title")
+            id: Number(formData.get("id")),
+            title: String(formData.get("title")),
+            done: Boolean(formData.get("done"))
         }
 
-        try {
-            await axios.put(`${BASE_URL}/todolists/${id}`, listInput);
-        } catch (err) {
-            console.log(`Error: ${err}`);
-        }
+        dispatch({
+            type: 'update',
+            payload: listInput
+        })
+    }
 
-        setListChanges(listChanges + 1);
+    function handleSelectList(listId: number) {
+        if (activeList === listId) {
+            setActiveList(0);
+        } else {
+            setActiveList(listId);
+        }
     }
     
-    
     async function handleDeleteList(listId: number) {
-        await axios.delete(`${BASE_URL}/todolists/${listId}`);
-        setListChanges(listChanges + 1);
+        dispatch({
+            type: 'delete',
+            payload: {
+                id: listId,
+                title: "",
+                done: false
+            }
+        })
     }
 
     return (
-        <div className="list-container">
+        <div className="m-4 md:grid md:grid-cols-2 lg:grid-cols-3 gap-4 items-start">
             {lists?.map(list => {
                 return <List
                     key={list.id}
@@ -75,18 +77,19 @@ export default function ListContainer() {
                         title: list.title,
                         done: list.done
                     }}
+                    isOpen={activeList === list.id}
                     onUpdate={handleUpdateList}
                     onDelete={() => handleDeleteList(list.id)}
+                    onSelect={() => handleSelectList(list.id)}
                 />
             })}
             {listCreation ?
                 <>
-                    <ListForm list={{title: ""}} onList={handleCreateList} />
-                    <button onClick={() => setListCreation(!listCreation)}>Cancel</button>
+                    <ListForm list={{title: ""}} onList={handleCreateList} onCancel={() => setListCreation(!listCreation)} />
                 </>
                 :
-                <div className="add-list">
-                    <button className="add-list-btn" onClick={() => setListCreation(!listCreation)}>Add list</button>
+                <div className=" ">
+                    <button className="green-btn w-full" onClick={() => setListCreation(!listCreation)}>Add List +</button>
                 </div>
             }
         </div>

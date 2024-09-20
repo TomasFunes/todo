@@ -1,39 +1,56 @@
-import axios from "axios";
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, Dispatch, useContext, useReducer } from "react";
 import {ListType} from "./types";
-import { urlContext } from "./url-context";
 
+interface ActionType {
+    type: string;
+    payload: ListType;
+}
+
+function saveLists(lists: ListType[]) {
+    localStorage.setItem("lists", JSON.stringify(lists));
+}
+
+function loadLists() {
+    const savedLists = localStorage.getItem("lists");
+    return savedLists ? JSON.parse(savedLists) : [];
+} 
+
+export function listsReducer(lists: ListType[], action: ActionType) {
+    const payloadList = action.payload;
+    switch (action.type) {
+        case 'create':
+            saveLists([...lists, payloadList]);
+            return loadLists();
+        case 'update':
+            saveLists(lists.map(list => {
+                if(list.id === payloadList.id) {
+                    return payloadList;
+                }
+                return list;
+            }));
+            return loadLists();
+        case 'delete':
+            saveLists(lists.filter(list => list.id !== payloadList.id));
+            return loadLists();
+        default:
+            return loadLists();
+    }
+}
 
 export const ListsContext = createContext([] as ListType[]);
-export const ListFetchContext = createContext(() => {});
+export const ListsDispatchContext = createContext<Dispatch<ActionType>>(() => {});
 
+export const useLists = () => useContext(ListsContext);
+export const useListsDispatch = () => useContext(ListsDispatchContext);
 
 export const ListsProvider = ({children}: { children: React.ReactNode }) => {
-    const BASE_URL = useContext(urlContext);
-    const [lists, setLists] = useState([]);
-
-    useEffect(() => {
-        fetchLists();
-    }, []);
-
-    const fetchLists = async () => {
-        try {
-            const response = await axios.get(`${BASE_URL}/todolists`);
-            const lists = response.data;
-
-            setLists(lists);
-            
-        } catch (error) {
-            console.error('Error fetching data112', error);
-        }
-    }
-
+    const [lists, dispatch] = useReducer(listsReducer, loadLists());
 
     return(
         <ListsContext.Provider value={lists}>
-            <ListFetchContext.Provider value={fetchLists}>
+            <ListsDispatchContext.Provider value={dispatch}>
                 {children}    
-            </ListFetchContext.Provider>
+            </ListsDispatchContext.Provider>
         </ListsContext.Provider>
     );
 }

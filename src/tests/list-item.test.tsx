@@ -11,12 +11,10 @@ describe('Item tests', () => {
             onUpdate={() => {}}
             />);
 
-        const configBtn = screen.getByRole('button');
 
         const description = screen.getByText(/item description/i) 
         const due = screen.getByText(/Due:/i);
 
-        expect(configBtn).toBeInTheDocument();
         expect(description).toBeInTheDocument();
         expect(due).toBeInTheDocument();
         
@@ -31,8 +29,6 @@ describe('Item tests', () => {
 
         user.setup;
 
-        const configBtn = screen.getByRole('button');
-        await user.click(configBtn);
         const editBtn = screen.getByRole('button', {
             name: 'Edit',
         })
@@ -54,8 +50,6 @@ describe('Item tests', () => {
             
         user.setup;
 
-        const configBtn = screen.getByRole('button');
-        await user.click(configBtn);
         const editBtn = screen.getByRole('button', {
             name: 'Edit',
         })

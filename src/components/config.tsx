@@ -1,46 +1,14 @@
-import { useEffect, useState, useRef } from "react";
-import { MouseEventHandler, MouseEvent } from "react";
-import "../static/config-styles.css";
+import { MouseEventHandler } from "react";
 
 export default function Config (props: {
     onEdit: MouseEventHandler<HTMLButtonElement>,
     onDelete: MouseEventHandler<HTMLButtonElement> 
 }) {
-    const [isActive, setIsActive] = useState(false); 
-    let divRef = useRef<HTMLDivElement>(null);
 
-    const handleOutsideClick = (event: any) => {
-        if(divRef.current && !divRef.current.contains(event.target)) {
-            setIsActive(false);
-        }
-    }
-
-    const handleButtonClick = (event: MouseEvent<HTMLButtonElement>) => {
-        setIsActive(!isActive);
-        event.stopPropagation();
-    }
-
-
-    useEffect(() => {
-        document.addEventListener('click', (event) => handleOutsideClick(event));
-    }, [])
-
-    
     return (
-        <>
-        <button onClick={(event) => handleButtonClick(event)} className="config-btn">
-            <img src="/settings-icon.png" 
-                width={32}
-                height={32} 
-                alt="A settings icon"
-                />
-        </button>
-        { isActive && 
-        <div className="config-options" ref={divRef}>
-            <button className="edit" onClick={props.onEdit}>Edit</button>
-            <button className="delete" onClick={props.onDelete}>Delete</button>
+        <div className="flex">
+            <button className="text-sm text-gray-500 hover:bg-yellow-100 px-2 py-1" onClick={props.onEdit}>Edit</button>
+            <button className="text-sm text-red-500 hover:bg-red-100 px-2 py-1" onClick={props.onDelete}>Delete</button>
         </div>  
-        }
-        </>
     )
 }
